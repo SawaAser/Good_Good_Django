@@ -15,8 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('women.urls')),
+    # через include ми достукуємося до всіх урлок в файлі /home/sawa/git/Good_Good_Django/Good_Django_Project/sitewomen/women/urls.py
+    # path('women/' - ми показуємо який корневий url буде до "додатка" його можна і пустим зробити і буде вигляд що то основа
 ]
