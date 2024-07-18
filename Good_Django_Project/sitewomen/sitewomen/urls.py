@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from women.views import page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +24,8 @@ urlpatterns = [
     # через include ми достукуємося до всіх урлок в файлі /home/sawa/git/Good_Good_Django/Good_Django_Project/sitewomen/women/urls.py
     # path('women/' - ми показуємо який корневий url буде до "додатка" його можна і пустим зробити і буде вигляд що то основа
 ]
+
+
+#це handler404 є вшите в джанго і тут просто його переоприділяємо
+#https://docs.djangoproject.com/en/5.0/ref/urls/
+handler404 = page_not_found

@@ -1,9 +1,17 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.template.loader import render_to_string
 
 
 def index(request): # HTTPrequest
-    return HttpResponse('Сторінка додатку women')
+    # t = render_to_string('women/index.html')
+    # return HttpResponse(t)
+    return render(request, 'women/index.html')
+
+
+def about(request):
+    return render(request, 'women/about.html')
 
 
 def categories(request, cat_id):
@@ -11,8 +19,20 @@ def categories(request, cat_id):
 
 
 def categories_by_slug(request, cat_slug):
+    if request.GET:
+        print(request.GET)
     return HttpResponse(f'<h1>Статті по категоріях</h1><p>cat_slug: {cat_slug}</p>')
 
 
 def archive(request, year):
+    if year > 2023:
+        uri = reverse('cats', args=('music', ))
+        # return redirect(uri)  # найкращий варіант
+        # return HttpResponseRedirect(uri)
+        return HttpResponsePermanentRedirect(uri)
+
     return HttpResponse(f'<h1>Архів по роках</h1><p>{year}</p>')
+
+
+def page_not_found(request, exception):
+    return HttpResponseNotFound("<h1>Сторінка незнайдена</h1>")
