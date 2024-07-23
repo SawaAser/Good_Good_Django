@@ -1,41 +1,20 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>{{ main_title|default:"Без заголовка" }}</title>   &lt;!&ndash; default:"Без заголовка"  дефолтне або брехливе значення&ndash;&gt;-->
-<!--</head>-->
-<!--<body>-->
-<!--<p>{{ menu|join:" * " }}</p>  &lt;!&ndash; |first перший елемент списку, |last останій елемент списку, |join:"*" такий самий як у пайтоні&ndash;&gt;-->
-<!--<p>{{ float |add:'50'|divisibleby:'2' }}</p> &lt;!&ndash; add:"3" додає і  приводить до int, |divisibleby:'3' чи ділиться чи ні &ndash;&gt;-->
-<!--<p>{{ lst|length }}</p>  &lt;!&ndash; |length довжина списку &ndash;&gt;-->
-<!--<p>{{ set }}</p>-->
-<!--<p>{{ dict.key1 }}</p>-->
-<!--<p>{{ obj.a }}</p>-->
-<!--<p>{{ "The Main Page"|slugify }}</p>  &lt;!&ndash; переводить в формат slug -> the-main-page  &ndash;&gt;-->
-<!--<p>{{ url }}</p>-->
-<!--<h1>{{ title|upper|cut:" " }}</h1>  &lt;!&ndash; capfirst з великої букви, lower всі малі, upper всі великі, с cut:' ' що видаляємо (але слитно треба писати) &ndash;&gt;-->
-<!--</body>-->
-<!--</html>-->
+{% extends 'base.html' %}
 
+{% block content %}
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-<p>{{ menu|join:" * " }}</p>
 <h1>{{ title|upper}}</h1>
+
+<!--{% include 'women/includes/nav.html' %}-->
 
 <ul> <!-- маркований список -->
     {% for p in posts %}   <!-- це на стороні сервера відбувається -->
     {% if p.id_published %}
     <li> <!-- пункти списку -->
-        <h2>{{ p.title }}</h2>
-        <p>{{ p.content }}</p>
+        <!--<h2>{{ p.title }}</h2>-->
+        {% autoescape off %}
+        <p>{{ p.content|linebreaks|truncatewords:50 }}</p>
+        {% endautoescape off %}
+        <P><a href="{% url 'post' p.id %}">Читати пост</a></P>
         {% if not forloop.last %}   <!-- ця зміна може бути тільки в for loop (і таких зміних є ще пару(+-10)) -->
         <hr> <!-- лінія підкреслення -->
         {% endif %}
@@ -43,6 +22,5 @@
     {% endif %}
     {% endfor %}
 </ul>
-
-</body>
-</html>
+<!--{% include 'women/includes/nav.html' %}-->
+{% endblock %}
