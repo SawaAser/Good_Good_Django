@@ -1,4 +1,4 @@
-class FourDifitYearConverter:
+class FourDigitYearConverter:
     regex = "[0-9]{4}"
 
     def to_python(self, value):

@@ -1,26 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<h1>{{ title|upper}}</h1>
-
-<!--{% include 'women/includes/nav.html' %}-->
-
-<ul> <!-- маркований список -->
-    {% for p in posts %}   <!-- це на стороні сервера відбувається -->
-    {% if p.id_published %}
-    <li> <!-- пункти списку -->
-        <!--<h2>{{ p.title }}</h2>-->
-        {% autoescape off %}
-        <p>{{ p.content|linebreaks|truncatewords:50 }}</p>
-        {% endautoescape off %}
-        <P><a href="{% url 'post' p.id %}">Читати пост</a></P>
-        {% if not forloop.last %}   <!-- ця зміна може бути тільки в for loop (і таких зміних є ще пару(+-10)) -->
-        <hr> <!-- лінія підкреслення -->
-        {% endif %}
-    </li>
-    {% endif %}
-    {% endfor %}
+<ul class="list-articles">
+	{% for p in posts %}
+			<li><h2>{{p.title}}</h2>
+    {% autoescape off %}
+	{{p.content|linebreaks|truncatewords:40}}
+    {% endautoescape %}
+			<div class="clear"></div>
+			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Читать пост</a></p>
+			</li>
+	{% endfor %}
 </ul>
-<!--{% include 'women/includes/nav.html' %}-->
 {% endblock %}
