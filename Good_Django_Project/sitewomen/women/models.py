@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.template.defaultfilters import slugify
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 
 def translit_to_eng(s: str) -> str:
@@ -24,7 +25,11 @@ class Women(models.Model):
         PUBLISHED = 1, "Опублікований"
 
     title = models.CharField(max_length=255, verbose_name='Загаловок')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Слаг')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Слаг',
+                            validators=[
+                                MinLengthValidator(5, message='Мінімум 5 символів'),
+                                MaxLengthValidator(100, message='Максимум 5 символів'),
+                            ])
     content = models.TextField(blank=True, verbose_name="Текст статї")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Час створення')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Час зміни')
