@@ -2,4 +2,9 @@
 
 {% block content %}
 <h1>{{title}}</h1>
+<form action="" method="post" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" -це обовязково щоб файли загружалися -->
+    {% csrf_token %} <!-- якщо методі пост то чомусь обовязково це писати -->
+    {{ form.as_p }}
+    <p><button type="submit">Отправить</button></p>
+</form>
 {% endblock %}

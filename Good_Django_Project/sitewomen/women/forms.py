@@ -3,7 +3,7 @@ from .models import Category, Husband
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.utils.deconstruct import deconstructible
 from django.core.exceptions import ValidationError
-
+from .models import Women
 
 # @deconstructible
 # class UaValidator:
@@ -18,31 +18,8 @@ from django.core.exceptions import ValidationError
 #             raise ValidationError(self.message, code=self.code)
 
 
-class AddPostForm(forms.Form):
-    title = forms.CharField(max_length=255,
-                            min_length=5,
-                            label='Заголовок',
-                            widget=forms.TextInput(attrs={'class': 'form-input'}), # тут типу додатвові параметри прописуємо до html
-                            # validators=[
-                            #     UaValidator(),          # остут ми додаємо свій валідатор
-                            # ],
-                            error_messages={
-                                'min_length': 'Занадто коротко',
-                                'required': 'Без заголовка'
-                            })
-    slug = forms.SlugField(max_length=255, label='URL',
-                           validators=[
-                               MinLengthValidator(5, message='Мінімум 5 символів'),
-                               MaxLengthValidator(100, message='Максимум 5 символів'),
-                           ])
-    content = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 5}),
-                              required=False,
-                              label='Контент'
-                              )
-    is_published = forms.BooleanField(required=False,
-                                      initial=True,
-                                      label='Статус'
-                                      )
+class AddPostForm(forms.ModelForm):
+
     cat = forms.ModelChoiceField(queryset=Category.objects.all(),
                                  empty_label='не вибрано',
                                  label='Категорії'
@@ -53,9 +30,25 @@ class AddPostForm(forms.Form):
                                      label='Чоловік'
                                      )
 
-    def clea_title(self):  # други варіант валідатора
-        title = self.cleaned_data['title']
-        ALLOWED_CHARS = 'йцукенгшщзхфівапролджєячсмитьбю.ЙЦУКЕНГШЩЗХЇФІВАПРОЛДЖЄЯЧСМИТЬБЮ.1234567890- '
+    class Meta:
+        model = Women
+        # fields = '__all__' # Всі крім тих які заповнються автоматично
+        fields = ['title', 'slug', 'content', 'photo', 'is_published', 'cat', 'husband', 'tags']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-input'}),
+            'content': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
+        }
+        labels = {
+            'slug': 'URL'
+        }
 
-        if not (set(title) <= set(ALLOWED_CHARS)):
-            raise ValidationError("повинні бути присутні тільки українські букви")
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if len(title) > 50:
+            raise ValidationError('Довжина перевищює 50 символів')
+
+        return title
+
+
+class UploadFileForm(forms.Form):
+    file = forms.ImageField(label='Файл')
